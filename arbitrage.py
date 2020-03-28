@@ -76,16 +76,22 @@ def get_888():
     timeEle = driver.find_element_by_xpath("//li[@data-id='sortByTime']")
     timeEle.click()
 
+    time.sleep(2)
     WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, "KambiBC-odds-format-select")))
     dropdown = Select(driver.find_element_by_id("KambiBC-odds-format-select"))
     dropdown.select_by_visible_text("Decimal")
 
-    WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.XPATH, "//li[@class='KambiBC-betoffer-labels__event-count']")));
-    unopened = driver.find_elements_by_xpath("//li[@class='KambiBC-betoffer-labels__event-count']")
-    for u in unopened:
-        u.click()
+    # tomorrow = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "KambiBC-mod-event-group-header__event-count")))
+    # tomorrow.click()
 
-# get_bovada()
-get_888()
-print(df)
-driver.close()
+    u = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CLASS_NAME, "KambiBC-betoffer-labels__event-count")));
+    print(u.text)
+    u.click()
+
+
+get_bovada()
+# get_888()
+# find arbitrage opportunities
+for ind in df.index:
+    if (1.0 / df['BVD_HomeW'][ind] + 1.0 / df['BVD_AwayW'][ind] + 1.0 / df['BVD_Draw'][ind] < 1.0):
+        print("Found Arbitrage Opporunity at match " + df['Home'][ind] + " vs. " + df['Away'][ind])
